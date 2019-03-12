@@ -1,6 +1,6 @@
 from main import *
 from payloadextras import *
-from psexecspray import *
+#from psexecspray import * #Remove import temporarily
 from startmetasploit import *
 from generatepayload import *
 from menu import *
@@ -69,7 +69,7 @@ def GeneratePayload(ez2read_shellcode,payloadname,shellcode):
     with open('%s/%s.py' % (payloaddir(), randoFileName), 'w+') as Filesave:
         Filesave.write(do_Encryption(SHELLCODE.injectwindows % (ez2read_shellcode)))
         Filesave.close()
-    print '[*] Creating Payload using Pyinstaller...'
+    print ('[*] Creating Payload using Pyinstaller...')
 
     p = subprocess.Popen(['wine', os.path.expanduser('~') + '/.win32/drive_c/Python27/python.exe', '/opt/pyinstaller/pyinstaller.py',
                           '%s/%s.py' % (payloaddir(), randoFileName), '--noconsole', '--onefile'], env=dict(os.environ, **{'WINEARCH':'win32','WINEPREFIX':os.path.expanduser('~') + '/.win32'}), bufsize=1024, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -77,7 +77,7 @@ def GeneratePayload(ez2read_shellcode,payloadname,shellcode):
     while p.poll() == None:
         LOADING.Update()
         time.sleep(0.2)
-    print '\r',
+    print ('\r',)
     sys.stdout.flush()
 
     payloadstderr = p.stderr.read()
@@ -87,11 +87,11 @@ def GeneratePayload(ez2read_shellcode,payloadname,shellcode):
     try:
         os.rename('dist/%s.exe' % randoFileName, '%s/%s.exe' % (payloaddir(), randoFileName))
     except OSError:
-        print t.bold_red + "[!] Error while creating payload..." + t.normal
-        print payloadstderr
+        print (t.bold_red + "[!] Error while creating payload..." + t.normal)
+        print (payloadstderr)
         return False
 
-    print t.normal + '\n[*] Payload.exe Has Been Generated And Is Located Here: ' + t.bold_green + '%s/%s.exe' % (payloaddir(), randoFileName) + t.normal
+    print (t.normal + '\n[*] Payload.exe Has Been Generated And Is Located Here: ' + t.bold_green + '%s/%s.exe' % (payloaddir(), randoFileName) + t.normal)
     CleanUpPayloadMess(randoFileName)
     DoPayloadUpload(randoFileName)
     return True
