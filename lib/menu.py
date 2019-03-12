@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 from main import *
 from payloadextras import *
 from startmetasploit import *
@@ -38,7 +38,7 @@ def cleanUpPayloads():
     for i in glob.glob(payloaddir() + "/*.exe"):
         os.remove(i)
         payloadsRemoved += 1
-    print t.bold_green + "[*] %s Payloads removed...."% payloadsRemoved + t.normal
+    print(t.bold_green + "[*] %s Payloads removed...."% payloadsRemoved + t.normal)
     return "clear"
 
 def getAndRunSandboxMenu():
@@ -51,7 +51,7 @@ def getAndRunPSMenu():
         psMenu = MenuOptions(psMenuOptions(), menuName="PS Menu")
         psMenu.runmenu()
     else:
-        print t.bold_red + "[!] Clients are needed to access this menu" + t.normal
+        print(t.bold_red + "[!] Clients are needed to access this menu" + t.normal)
     return "pass"
 
 def getAndRunClientMenu():
@@ -59,7 +59,7 @@ def getAndRunClientMenu():
         clientMenu = MenuOptions(clientMenuOptions, menuName="Client Menu")
         clientMenu.runmenu()
     else:
-        print t.bold_red + "[!] Clients are needed to access this menu" + t.normal
+        print(t.bold_red + "[!] Clients are needed to access this menu" + t.normal)
     return "pass"
 
 def getAndRunMainMenu():
@@ -68,7 +68,7 @@ def getAndRunMainMenu():
     return "pass"
 
 def returnText(colour, text):
-    print colour + text + t.normal
+    print(colour + text + t.normal)
 
 def mainMenuOptions():
     return OrderedDict([
@@ -148,14 +148,14 @@ class MenuOptions(object):
             n, option = n.split()
         except:
             pass
-        if self.choices.has_key(n):
+        if n in self.choices:
             if n == '?':
                 return (True, self.choices[n]['payloadchoice'], self.choices[n]['payload'], self.choices[n]['extrawork'], option)
             else:
                 return (True, self.choices[n]['payloadchoice'], self.choices[n]['payload'], self.choices[n]['extrawork'], self.choices[n]['params'])
         else:
             if not n == "":
-                print t.bold_red + '[*] Wrong Selection' + t.normal
+                print(t.bold_red + '[*] Wrong Selection' + t.normal)
             return (False, None, None, None, None)
 
     def runmenu(self):
@@ -188,7 +188,7 @@ class MenuOptions(object):
                     pass
                 else:
                     if result:
-                        print result
+                        print(result)
 
     def printMenues(self,toClear):
         Splash(toClear)
@@ -196,13 +196,13 @@ class MenuOptions(object):
             adjust = 0
         else:
             adjust = -1
-        print t.bold_black + '=' * (t.width / 2 - (len(self.menuName) / 2)) + t.yellow + self.menuName + t.bold_black + '=' * (t.width / 2 - ((len(self.menuName) / 2)- adjust)) + t.normal
+        print(t.bold_black + '=' * (t.width / 2 - (len(self.menuName) / 2)) + t.yellow + self.menuName + t.bold_black + '=' * (t.width / 2 - ((len(self.menuName) / 2)- adjust)) + t.normal)
         maxlen = 0
         arr = []
-        for i in self.choices.iterkeys():
+        for i in self.choices.keys():
             menuPrintString = t.bold_yellow + str(i) + ': ' + t.normal + str(self.choices[i]['payload']).replace('_',' ')
-            if 'availablemodules' in self.choices[i].keys() and self.choices[i]['availablemodules']:
-                menuPrintString += t.bold_green + ' ' + str(self.choices[i]['availablemodules'].keys()).replace('\'','').replace('normal, ','') + t.normal
+            if 'availablemodules' in list(self.choices[i].keys()) and self.choices[i]['availablemodules']:
+                menuPrintString += t.bold_green + ' ' + str(list(self.choices[i]['availablemodules'].keys())).replace('\'','').replace('normal, ','') + t.normal
             if 'spacer' in self.choices[i]:
                 menuPrintString += '\n'
 
@@ -219,16 +219,16 @@ class MenuOptions(object):
                 adjust = 0
             else:
                 adjust = 1
-            print (' '* spacing) + i + (' ' * (spacing - adjust))
-        print t.bold_black + '='*t.width + t.normal
+            print((' '* spacing) + i + (' ' * (spacing - adjust)))
+        print(t.bold_black + '='*t.width + t.normal)
 
 def Splash(toClear):
     if toClear:
-        print t.clear
-    print t.bold_red
-    print noColourCenter("_       ___       ____              __                __")
-    print noColourCenter("   | |     / (_)___  / __ \____ ___  __/ /___  ____ _____/ /____")
-    print noColourCenter("   | | /| / / / __ \/ /_/ / __ `/ / / / / __ \/ __ `/ __  / ___/")
-    print noColourCenter(" | |/ |/ / / / / / ____/ /_/ / /_/ / / /_/ / /_/ / /_/ (__  )")
-    print noColourCenter(" |__/|__/_/_/ /_/_/    \__,_/\__, /_/\____/\__,_/\__,_/____/")
-    print noColourCenter("                        /____/NCCGroup - CharlieDean" + t.normal)
+        print(t.clear)
+    print(t.bold_red)
+    print(noColourCenter("_       ___       ____              __                __"))
+    print(noColourCenter("   | |     / (_)___  / __ \____ ___  __/ /___  ____ _____/ /____"))
+    print(noColourCenter("   | | /| / / / __ \/ /_/ / __ `/ / / / / __ \/ __ `/ __  / ___/"))
+    print(noColourCenter(" | |/ |/ / / / / / ____/ /_/ / /_/ / / /_/ / /_/ / /_/ (__  )"))
+    print(noColourCenter(" |__/|__/_/_/ /_/_/    \__,_/\__, /_/\____/\__,_/\__,_/____/"))
+    print(noColourCenter("                        /____/NCCGroup - CharlieDean" + t.normal))

