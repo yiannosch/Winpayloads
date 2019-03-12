@@ -5,7 +5,7 @@ Attempting to a add support for Python3...
 
 Nothing works for now   
 
-¯\_(ツ)_/¯
+`¯\_(ツ)_/¯`
 
 ## As usual, Don't upload payloads to any online virus checkers  
 - Virus Total Detection - Updated 25/01/2019 - 16/68 Detections  
