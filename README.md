@@ -1,7 +1,7 @@
 # Winpayloads - Python2.7
 Undetectable Windows Payload Generation with extras Running on Python2.7
 
-Attempting to a add support for Python3...
+Attempting to add support for Python3...
 
 Nothing works for now   
 
