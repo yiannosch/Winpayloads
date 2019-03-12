@@ -1,6 +1,12 @@
 # Winpayloads - Python2.7
 Undetectable Windows Payload Generation with extras Running on Python2.7
 
+Attempting to add support for Python3...
+
+Nothing works for now   
+
+`¯\_(ツ)_/¯`
+
 ## As usual, Don't upload payloads to any online virus checkers  
 - Virus Total Detection - Updated 25/01/2019 - 16/68 Detections  
 https://www.virustotal.com/#/file/a921ac7540c93bf03a8ed76158b445b5f8780d8f112405811ebbe820c0e3d5c3/detection
