@@ -32,7 +32,7 @@ class Handler(asyncore.dispatcher):
         return
 
     def handle_close(self):
-        print t.bold_red + "Client %s Connection Killed"% self.server.get_clientnumber() + t.normal
+        print (t.bold_red + "Client %s Connection Killed"% self.server.get_clientnumber() + t.normal)
         self.close()
 
     def readable(self):
@@ -85,12 +85,12 @@ class Server(asyncore.dispatcher):
 
     def handle_connect(self):
         self.socket = ssl.wrap_socket(self.socket, ssl_version=ssl.PROTOCOL_TLSv1, ciphers='AES256', do_handshake_on_connect=False)
-        print '[*] Connection to %s:%s'%(self.socket.getpeername())
+        print ('[*] Connection to %s:%s'%(self.socket.getpeername()))
 
     def _handshake(self):
         try:
             self.socket.do_handshake()
-        except ssl.SSLError, err:
+        except ssl.SSLError as err:
             self.want_read = self.want_write = False
             if err.args[0] == ssl.SSL_ERROR_WANT_READ:
                 self.want_read = True
@@ -108,7 +108,7 @@ class Server(asyncore.dispatcher):
             self.socket = ssl.wrap_socket(self.socket, ssl_version=ssl.PROTOCOL_TLSv1, ciphers='AES256', server_side=True, certfile='server.crt', keyfile='server.key')
         clientconn, address = self.accept()
         if clientconn:
-            print '[*] Connection from %s:%s'%(address)
+            print ('[*] Connection from %s:%s'%(address))
             self.clientnumber += 1
             handler = Handler(clientconn, self, map=self.map)
             self.handlers[self.clientnumber] = handler
