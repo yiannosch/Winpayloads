@@ -1,10 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 from lib.main import *
 from lib.payloadextras import *
 from lib.startmetasploit import *
 from lib.menu import *
 
-
+#start editing
 try:
     from lib.psexecspray import *
 except:
