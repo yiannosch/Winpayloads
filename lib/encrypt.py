@@ -3,7 +3,7 @@ import os
 import random
 import string
 import requests
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 import re
 import blessed
 
@@ -14,7 +14,7 @@ def randomVar():
 
 def randomJunk():
     newString = ''
-    for i in xrange(random.randint(1, 10)):
+    for i in range(random.randint(1, 10)):
         newString += ''.join(random.sample(string.ascii_lowercase, random.randint(1, 26)))
     return newString
 
@@ -32,7 +32,7 @@ def getSandboxScripts(sandboxLang='python'):
             rex = re.search('\*([^\*]*)\*.*\$([^\*]..*)\$', sandboxContent) # Regex is ugly pls help
             if rex:
                 originalString, scriptVariable, variableValue = rex.group(), rex.group(1), rex.group(2)
-                setVariable = raw_input(t.bold_green + '\n[!] {} Sandbox Script Configuration:\n'.format(payloadChoice) + t.bold_red + '[*] {}? [{}]:'.format(scriptVariable, variableValue)  + t.normal)
+                setVariable = input(t.bold_green + '\n[!] {} Sandbox Script Configuration:\n'.format(payloadChoice) + t.bold_red + '[*] {}? [{}]:'.format(scriptVariable, variableValue)  + t.normal)
                 if setVariable:
                     try:
                         int(setVariable)
@@ -42,7 +42,7 @@ def getSandboxScripts(sandboxLang='python'):
                 newString = scriptVariable + ' = ' + variableValue
                 sandboxContent = sandboxContent.replace(originalString, newString)
             sandboxScripts += sandboxContent
-    print sandboxScripts
+    print (sandboxScripts)
     return sandboxScripts
 
 
@@ -67,7 +67,7 @@ def do_Encryption(payload):
         rawHTML = HTMLParser().unescape(requests.get('http://www.4geeks.de/cgi-bin/webgen.py').text)
         randomPython = re.sub('<.*>', '', rawHTML).strip().replace('.','')
     except:
-        print t.bold_red + '[!] No network Connection, random python not generated.' + t.normal
+        print (t.bold_red + '[!] No network Connection, random python not generated.' + t.normal)
         randomPython = 'if __name__ == \'__main__\':'
 
 
