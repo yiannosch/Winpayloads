@@ -36,9 +36,9 @@ except KeyboardInterrupt:
     pass
 
 
-from lib.listener import StartAsync
-async = StartAsync()
-async.start()
+#from lib.listener import StartAsync
+#async = StartAsync()
+#async.start()
 
 try:
     getAndRunMainMenu()

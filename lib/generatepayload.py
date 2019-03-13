@@ -1,11 +1,11 @@
-from main import *
-from payloadextras import *
+from lib.main import *
+from lib.payloadextras import *
 #from psexecspray import * #Remove import temporarily
-from startmetasploit import *
-from generatepayload import *
-from menu import *
-from encrypt import *
-from stager import *
+from lib.startmetasploit import *
+from lib.generatepayload import *
+from lib.menu import *
+from lib.encrypt import *
+from lib.stager import *
 
 
 METASPLOIT_Functions = {
@@ -59,9 +59,9 @@ def askAndReturnModules(shellcode, metasploit_type):
         return (EXTRAS(shellcode).RETURN_EZ2READ_SHELLCODE(), METASPLOIT_Functions[metasploit_type]['normal'])
 
 def GeneratePayload(ez2read_shellcode,payloadname,shellcode):
-    from menu import clientMenuOptions
+    from lib.menu import clientMenuOptions
     if len(clientMenuOptions.keys()) > 2:
-        from stager import clientUpload
+        from lib.stager import clientUpload
         if clientUpload(powershellExec=ez2read_shellcode, isExe=True, json='{"type":"", "data":"%s", "sendoutput":"false", "multiple":"true"}'):
             return True
 
@@ -104,7 +104,7 @@ def CleanUpPayloadMess(randoFileName):
     os.system('rm %s/%s.py' % (payloaddir(), randoFileName))
 
 def DoPayloadUpload(payloadname):
-    from menu import returnIP
+    from lib.menu import returnIP
     want_to_upload = raw_input(
         '\n[*] Upload To Local Websever or (p)sexec? [y]/p/n: ')
     if want_to_upload.lower() == 'p' or want_to_upload.lower() == 'psexec':

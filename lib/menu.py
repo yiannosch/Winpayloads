@@ -1,10 +1,10 @@
 
-from main import *
-from payloadextras import *
-from startmetasploit import *
-from generatepayload import *
-from preparepayload import *
-from stager import *
+from lib.main import *
+from lib.payloadextras import *
+from lib.startmetasploit import *
+from lib.generatepayload import *
+from lib.preparepayload import *
+from lib.stager import *
 import glob
 
 GetIP = InterfaceSelecta()
@@ -28,7 +28,7 @@ def noColourLen(colourString):
     return len(re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]').sub('', colourString))
 
 def noColourCenter(colourString):
-    len = (t.width / 2) - (noColourLen(colourString) /2 )
+    len = (t.width // 2) - (noColourLen(colourString) //2 )
     if len % 2 > 0:
         len -= 1
     return (' ' * len) + colourString
@@ -196,7 +196,7 @@ class MenuOptions(object):
             adjust = 0
         else:
             adjust = -1
-        print(t.bold_black + '=' * (t.width / 2 - (len(self.menuName) / 2)) + t.yellow + self.menuName + t.bold_black + '=' * (t.width / 2 - ((len(self.menuName) / 2)- adjust)) + t.normal)
+        print(t.bold_black + '=' * (t.width // 2 - (len(self.menuName) // 2)) + t.yellow + self.menuName + t.bold_black + '=' * (t.width // 2 - ((len(self.menuName) // 2)- adjust)) + t.normal)
         maxlen = 0
         arr = []
         for i in self.choices.keys():
@@ -212,7 +212,7 @@ class MenuOptions(object):
             arr.append(menuPrintString)
 
         for i in arr:
-            spacing = (t.width / 2) - (maxlen / 2)
+            spacing = (t.width // 2) - (maxlen // 2)
             if spacing % 2 > 0:
                 spacing -= 1
             if len(i) % 2 > 0:

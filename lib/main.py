@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+'''-*- coding: utf-8 -*-'''
 import os
 import socket
 import re
@@ -16,7 +16,7 @@ import string
 import glob
 import readline
 import time
-import psexec
+#import psexec
 import urllib.request, urllib.error, urllib.parse
 from collections import OrderedDict
 import string
@@ -59,7 +59,7 @@ helpDict = {
 
 
 def sandboxChoose(choice):
-    from menu import sandboxMenuOptions, getAndRunSandboxMenu
+    from lib.menu import sandboxMenuOptions, getAndRunSandboxMenu
     if sandboxMenuOptions[choice]['availablemodules']:
         sandboxMenuOptions[choice]['availablemodules'] = None
     else:
@@ -253,7 +253,7 @@ class FUNCTIONS(object):
         a.start()
 
     def randomUnusedPort(self):
-        from menu import returnIP
+        from lib.menu import returnIP
         s = socket.socket()
         s.bind((returnIP(), 0))
         port = s.getsockname()[1]
@@ -261,7 +261,7 @@ class FUNCTIONS(object):
         return port
 
     def stagePowershellCode(self, powershellFileContents, port):
-        from menu import returnIP
+        from lib.menu import returnIP
         DIR = 'stager'
         if not os.path.isdir(DIR):
             os.mkdir(DIR)

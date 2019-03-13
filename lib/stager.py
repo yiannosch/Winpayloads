@@ -1,6 +1,5 @@
-
-from main import *
-from menu import *
+from lib.main import *
+from lib.menu import *
 from prompt_toolkit.contrib.completers import WordCompleter
 
 history = prompt_toolkit.history.InMemoryHistory()
@@ -9,7 +8,7 @@ serverlist = []
 
 def killAllClients():
     numberofclientskilled = 0
-    from menu import clientMenuOptions
+    from lib.menu import clientMenuOptions
     if len(clientMenuOptions) > 2:
         suretoquit = input('You have clients connected. Are you sure you want to exit? [y]/n: ')
         if suretoquit.lower() == 'y' or suretoquit.lower() == '':
@@ -24,8 +23,8 @@ def killAllClients():
         return True
 
 def printListener(printit=True, returnit=False):
-    from listener import Server
-    from menu import returnIP
+    from lib.listener import Server
+    from lib.menu import returnIP
     powershellFileName = 'p.ps1'
 
     while True:
@@ -69,7 +68,7 @@ def printListener(printit=True, returnit=False):
 
 def interactShell(clientnumber):
     clientnumber = int(clientnumber)
-    from menu import clientMenuOptions
+    from lib.menu import clientMenuOptions
     for server in serverlist:
         if clientnumber in list(server.handlers.keys()):
             print("Commands\n" + "-"*50 + "\nback - Background Shell\nexit - Close Connection\n" + "-"*50)
@@ -127,7 +126,7 @@ def checkPayloadLength(payload):
 
 
 def checkUpload():
-    from menu import clientMenuOptions
+    from lib.menu import clientMenuOptions
     use_client_upload = prompt_toolkit.prompt('\n[?] Upload Using Client Connection? [y]/n: ', patch_stdout=True, completer=WordCompleter(['y', 'n']))
     print()
     if use_client_upload.lower() == 'y' or use_client_upload == '':
@@ -148,8 +147,8 @@ def checkUpload():
     return False
 
 def clientUpload(powershellExec, isExe, json):
-    from menu import returnIP
-    from encrypt import getSandboxScripts
+    from lib.menu import returnIP
+    from lib.encrypt import getSandboxScripts
     clientnumber = checkUpload()
     if clientnumber:
         if isExe:

