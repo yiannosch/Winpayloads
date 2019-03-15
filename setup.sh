@@ -37,7 +37,7 @@ sudo pip3 install pyasn1
 sudo pip3 install --force-reinstall prompt-toolkit==1.0.15
 sudo pip3 install netifaces
 sudo pip3 install requests
-sudo pip3 install parse
+sudo pip3 install lxml
 sudo pip3 install codecs
 
 echo -e '\033[1;32m[*] Downloading Python27, Pywin32 and Pycrypto For Wine \033[0m'
