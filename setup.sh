@@ -20,7 +20,7 @@ done
 echo -e '\033[1;32m[*] Installing Dependencies \033[0m'
 sudo dpkg --add-architecture i386
 sudo apt-get update
-sudo apt-get -y install unzip wget python2.7 python-crypto python-pip curl winbind
+sudo apt-get -y install unzip wget python2.7 python3.6 python-crypto python3-pip curl winbind
 
 echo -e '\033[1;32m[*] Installing Wine \033[0m'
 sudo apt-get -y install wine32
@@ -32,11 +32,12 @@ wine cmd.exe /c 'wmic os get osarchitecture'
 echo -e '\033[0m'
 
 echo -e '\033[1;32m[*] Installing Python Requirements \033[0m'
-sudo pip install blessed
-sudo pip install pyasn1
-sudo pip install --force-reinstall prompt-toolkit==1.0.15
-sudo pip install netifaces
-sudo pip install requests
+sudo pip3 install blessed
+sudo pip3 install pyasn1
+sudo pip3 install --force-reinstall prompt-toolkit==1.0.15
+sudo pip3 install netifaces
+sudo pip3 install requests
+sudo pip3 install codecs
 
 echo -e '\033[1;32m[*] Downloading Python27, Pywin32 and Pycrypto For Wine \033[0m'
 if [[ ! -d "~/.win32/drive_c/Python27/" || $reinstall -eq 1 ]]; then
@@ -75,7 +76,7 @@ fi
 
 
 echo -e '\033[1;32m[*] Installing impacket from Git \033[0m'
-if [[ ! -d "/usr/local/lib/python2.7/dist-packages/impacket" || $reinstall -eq 1 ]]; then
+if [[ ! -d "/usr/local/lib/python3.6/dist-packages/impacket" || $reinstall -eq 1 ]]; then
   git clone https://github.com/CoreSecurity/impacket.git
   cd impacket
   sudo python2.7 setup.py install
