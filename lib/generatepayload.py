@@ -41,18 +41,18 @@ def askAndReturnModules(shellcode, metasploit_type):
     if metasploit_type == 'nclistener':
         return (EXTRAS(shellcode).RETURN_EZ2READ_SHELLCODE(), METASPLOIT_Functions[metasploit_type]['nclisten'])
     else:
-        want_UACBYPASS = raw_input(t.bold_red + '[*] Try UAC Bypass(Only Works For Local Admin Account)?' + t.bold_red + ' y/[n]:' + t.normal)
+        want_UACBYPASS = input(t.bold_red + '[*] Try UAC Bypass(Only Works For Local Admin Account)?' + t.bold_red + ' y/[n]:' + t.normal)
         if want_UACBYPASS.lower() == 'y':
-            win7orwin10 = raw_input(t.bold_red + '[*] Windows 7 or 10?' + t.bold_red + ' 7/[10]:' + t.normal)
+            win7orwin10 = input(t.bold_red + '[*] Windows 7 or 10?' + t.bold_red + ' 7/[10]:' + t.normal)
             if not win7orwin10:
                 win7orwin10 = "10"
             return (EXTRAS(shellcode).UACBYPASS(win7orwin10), METASPLOIT_Functions[metasploit_type]['uacbypass'])
 
-        want_ALLCHECKS = raw_input(t.bold_red + '[*] Invoke Priv Esc Checks? y/[n]:' + t.normal)
+        want_ALLCHECKS = input(t.bold_red + '[*] Invoke Priv Esc Checks? y/[n]:' + t.normal)
         if want_ALLCHECKS.lower() == 'y':
             return (EXTRAS(shellcode).ALLCHECKS(), METASPLOIT_Functions[metasploit_type]['allchecks'])
 
-        want_PERSISTENCE = raw_input(t.bold_red + '[*] Persistent Payload on Boot? y/[n]:' + t.normal)
+        want_PERSISTENCE = input(t.bold_red + '[*] Persistent Payload on Boot? y/[n]:' + t.normal)
         if want_PERSISTENCE.lower() == 'y':
             return (EXTRAS(shellcode).PERSISTENCE(), METASPLOIT_Functions[metasploit_type]['persistence'])
 
@@ -105,7 +105,7 @@ def CleanUpPayloadMess(randoFileName):
 
 def DoPayloadUpload(payloadname):
     from lib.menu import returnIP
-    want_to_upload = raw_input(
+    want_to_upload = input(
         '\n[*] Upload To Local Websever or (p)sexec? [y]/p/n: ')
     if want_to_upload.lower() == 'p' or want_to_upload.lower() == 'psexec':
         DoPsexecSpray(payloaddir() + '/' + payloadname + '.exe')
