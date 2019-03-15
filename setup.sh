@@ -37,6 +37,7 @@ sudo pip3 install pyasn1
 sudo pip3 install --force-reinstall prompt-toolkit==1.0.15
 sudo pip3 install netifaces
 sudo pip3 install requests
+sudo pip3 install parse
 sudo pip3 install codecs
 
 echo -e '\033[1;32m[*] Downloading Python27, Pywin32 and Pycrypto For Wine \033[0m'
@@ -76,7 +77,7 @@ fi
 
 
 echo -e '\033[1;32m[*] Installing impacket from Git \033[0m'
-if [[ ! -d "/usr/local/lib/python3.6/dist-packages/impacket" || $reinstall -eq 1 ]]; then
+if [[ ! -d "/usr/local/lib/python2.7/dist-packages/impacket" || $reinstall -eq 1 ]]; then
   git clone https://github.com/CoreSecurity/impacket.git
   cd impacket
   sudo python2.7 setup.py install
@@ -114,7 +115,7 @@ echo -e '\033[1;32m[*] Done \033[0m'
 
 
 echo -e '\033[1;32m[*] Grabbing Certs \033[0m'
-openssl genrsa -out server.pass.key 2048
+openssl genrsa -out server.pass.key 4096
 openssl rsa -in server.pass.key -out server.key
 openssl req -new -key server.key -out server.csr -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com"
 openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
