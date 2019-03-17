@@ -16,7 +16,7 @@ RUN apt-get update && \
     apt-get install metasploit-framework -y && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/nccgroup/winpayloads.git /root/winpayloads
+RUN git clone https://github.com/yiannosch/Winpayloads.git /root/winpayloads
 
 WORKDIR /root/winpayloads
 
@@ -24,4 +24,4 @@ RUN sed -i 's/sudo //g' setup.sh
 
 RUN ./setup.sh
 
-ENTRYPOINT ["python", "WinPayloads.py"]
+ENTRYPOINT ["python3", "WinPayloads.py"]
