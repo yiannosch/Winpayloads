@@ -89,7 +89,7 @@ def interactShell(clientnumber):
                     if command == "":
                         server.handlers[clientnumber].out_buffer.append('{"type":"", "data":"", "sendoutput":""}')
                     else:
-                        json = '{"type":"exec", "data":"%s", "sendoutput":"true"}'% ((base64.b64encode(command.encode('utf_16_le'))))
+                        json = '{"type":"exec", "data":"%s", "sendoutput":"true"}'% (base64.b64encode(command.encode('UTF_16_le'))).decode()
                         server.handlers[clientnumber].out_buffer.append(json)
                         while not server.handlers[clientnumber].in_buffer:
                             time.sleep(0.01)
