@@ -40,6 +40,7 @@ class Handler(asyncore.dispatcher):
 
     def handle_read(self):
         data = self.recv(8000)
+        data = str(data.decode()) #Fixing data encoding
         if data:
             self.in_buffer.append(data)
             if '[#check#]' in data:
@@ -53,7 +54,7 @@ class Handler(asyncore.dispatcher):
         return len(self.out_buffer) > 0
 
     def handle_write(self):
-        sent = self.send(self.out_buffer.pop())
+        sent = self.send(bytes(self.out_buffer.pop())) # Casting to bytes. Temp fix
 
 class Server(asyncore.dispatcher):
     want_read = want_write = True
