@@ -1,5 +1,18 @@
-from stager import *
+from lib.stager import *
 import threading
+import asyncio
+
+###Rewriting listener using asyncio
+
+async def Handler()
+
+
+async def handle_read(reader, writer):
+    data = await reader.read(1000)
+    message = data.decode()
+    addr = writer.get_extra_info('peerinfo')
+
+
 
 amap = {}
 
@@ -32,7 +45,7 @@ class Handler(asyncore.dispatcher):
         return
 
     def handle_close(self):
-        print t.bold_red + "Client %s Connection Killed"% self.server.get_clientnumber() + t.normal
+        print(t.bold_red + "Client %s Connection Killed"% self.server.get_clientnumber() + t.normal)
         self.close()
 
     def readable(self):
@@ -40,20 +53,23 @@ class Handler(asyncore.dispatcher):
 
     def handle_read(self):
         data = self.recv(8000)
+        data = str(data.decode())
         if data:
             self.in_buffer.append(data)
             if '[#check#]' in data:
                 self.user_name = "User:" + data.split(':')[0].replace('\x00','').replace('[#check#]','')
                 self.is_admin = "Admin:" + data.split(':')[1].replace('\x00','').replace('[#check#]','')
-                from menu import clientMenuOptions
-                clientMenuOptions[self.server.get_clientnumber()] =  {'payloadchoice': None, 'payload':str(self.getpeername()[0]) + ":" + str(self.getpeername()[1]), 'extrawork': interactShell, 'params': (self.server.get_clientnumber()), 'availablemodules':{self.user_name: '', self.is_admin: ''}}
+                from lib.menu import clientMenuOptions
+                clientMenuOptions[self.server.get_clientnumber()] =  {'payloadchoice': None, 'payload':str(self.socket.getpeername()[0]) + ":" + str(self.socket.getpeername()[1]), 'extrawork': interactShell, 'params': (self.server.get_clientnumber()), 'availablemodules':{self.user_name: '', self.is_admin: ''}}
                 self.in_buffer = []
 
     def writable(self):
         return len(self.out_buffer) > 0
 
     def handle_write(self):
-        sent = self.send(self.out_buffer.pop())
+        sent = self.send(self.out_buffer.pop().encode()) # Casting to bytes. Let's see if works
+
+
 
 class Server(asyncore.dispatcher):
     want_read = want_write = True
@@ -85,12 +101,12 @@ class Server(asyncore.dispatcher):
 
     def handle_connect(self):
         self.socket = ssl.wrap_socket(self.socket, ssl_version=ssl.PROTOCOL_TLSv1, ciphers='AES256', do_handshake_on_connect=False)
-        print '[*] Connection to %s:%s'%(self.socket.getpeername())
+        print('[*] Connection to %s:%s'%(self.socket.getpeername()))
 
     def _handshake(self):
         try:
             self.socket.do_handshake()
-        except ssl.SSLError, err:
+        except ssl.SSLError as err:
             self.want_read = self.want_write = False
             if err.args[0] == ssl.SSL_ERROR_WANT_READ:
                 self.want_read = True
@@ -108,7 +124,7 @@ class Server(asyncore.dispatcher):
             self.socket = ssl.wrap_socket(self.socket, ssl_version=ssl.PROTOCOL_TLSv1, ciphers='AES256', server_side=True, certfile='server.crt', keyfile='server.key')
         clientconn, address = self.accept()
         if clientconn:
-            print '[*] Connection from %s:%s'%(address)
+            print('[*] Connection from %s:%s'%(address))
             self.clientnumber += 1
             handler = Handler(clientconn, self, map=self.map)
             self.handlers[self.clientnumber] = handler
