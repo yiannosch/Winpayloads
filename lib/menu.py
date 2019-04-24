@@ -1,4 +1,3 @@
-
 from lib.main import *
 from lib.payloadextras import *
 from lib.startmetasploit import *
@@ -28,10 +27,11 @@ def noColourLen(colourString):
     return len(re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]').sub('', colourString))
 
 def noColourCenter(colourString):
-    len = (t.width // 2) - (noColourLen(colourString) //2 )
+    len = (t.width / 2) - (noColourLen(colourString) /2 )
     if len % 2 > 0:
         len -= 1
-    return (' ' * len) + colourString
+    #return (' ' * len) + colourString
+    return (' ' * int(len)) + colourString # casting float to int to fix issue
 
 def cleanUpPayloads():
     payloadsRemoved = 0
@@ -196,7 +196,9 @@ class MenuOptions(object):
             adjust = 0
         else:
             adjust = -1
-        print(t.bold_black + '=' * (t.width // 2 - (len(self.menuName) // 2)) + t.yellow + self.menuName + t.bold_black + '=' * (t.width // 2 - ((len(self.menuName) // 2)- adjust)) + t.normal)
+        #print(t.bold_black + '=' * (t.width / 2 - (len(self.menuName) / 2)) + t.yellow + self.menuName + t.bold_black + '=' * (t.width / 2 - ((len(self.menuName) / 2)- adjust)) + t.normal)
+        #fix float multiplication again
+        print(t.bold_black + '=' * int((t.width / 2 - (len(self.menuName) / 2))) + t.yellow + self.menuName + t.bold_black + '=' * int((t.width / 2 - ((len(self.menuName) / 2)- adjust))) + t.normal)
         maxlen = 0
         arr = []
         for i in self.choices.keys():
@@ -212,14 +214,16 @@ class MenuOptions(object):
             arr.append(menuPrintString)
 
         for i in arr:
-            spacing = (t.width // 2) - (maxlen // 2)
+            spacing = (t.width / 2) - (maxlen / 2)
             if spacing % 2 > 0:
                 spacing -= 1
             if len(i) % 2 > 0:
                 adjust = 0
             else:
                 adjust = 1
-            print((' '* spacing) + i + (' ' * (spacing - adjust)))
+            #print((' '* spacing) + i + (' ' * (spacing - adjust)))
+            #fixing float multiplication issue again
+            print((' '* int(spacing)) + i + (' ' * int((spacing - adjust))))
         print(t.bold_black + '='*t.width + t.normal)
 
 def Splash(toClear):
