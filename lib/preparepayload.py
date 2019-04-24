@@ -110,7 +110,6 @@ def reversePowerShellAskCredsGeneration(payloadchoice,payloadname):
     return "pass"
 
 
-
 def reversePowerShellInvokeMimikatzGeneration(payloadchoice,payloadname):
     from lib.menu import returnIP
     moduleport = FUNCTIONS().randomUnusedPort()
